@@ -159,6 +159,13 @@ public class Controller {
         alert.showAndWait();
     }
 
+    public void shutdown() {
+        if (countdownTimeline != null) {
+            countdownTimeline.stop();
+        }
+        localScanServer.stop();
+    }
+
     private void applyAttendanceAttempt(AttendanceManager.MarkAttempt attempt) {
         if (attempt.getStudent() != null) {
             attendanceRows.add(attempt.getStudent());

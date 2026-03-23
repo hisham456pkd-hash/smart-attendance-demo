@@ -18,6 +18,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class LocalScanServer {
+    private static final int PREFERRED_PORT = 8085;
+
     private final Supplier<Boolean> sessionActiveSupplier;
     private final Supplier<String> tokenSupplier;
     private final Consumer<AttendanceManager.MarkAttempt> attendanceConsumer;
@@ -42,12 +44,12 @@ public class LocalScanServer {
         }
 
         try {
-            httpServer = HttpServer.create(new InetSocketAddress(8085), 0);
+            httpServer = createHttpServer();
             httpServer.createContext("/scan", new ScanPageHandler());
             httpServer.createContext("/mark", new MarkAttendanceHandler());
             httpServer.setExecutor(null);
             httpServer.start();
-            baseUrl = "http://" + resolveLocalIpAddress() + ":8085";
+            baseUrl = "http://" + resolveLocalIpAddress() + ":" + httpServer.getAddress().getPort();
         } catch (IOException exception) {
             throw new IllegalStateException("Failed to start local scan server.", exception);
         }
@@ -62,6 +64,14 @@ public class LocalScanServer {
 
     public String getBaseUrl() {
         return baseUrl;
+    }
+
+    private HttpServer createHttpServer() throws IOException {
+        try {
+            return HttpServer.create(new InetSocketAddress(PREFERRED_PORT), 0);
+        } catch (IOException ignored) {
+            return HttpServer.create(new InetSocketAddress(0), 0);
+        }
     }
 
     private String resolveLocalIpAddress() {
