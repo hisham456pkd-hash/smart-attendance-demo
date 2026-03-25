@@ -1,0 +1,9 @@
+LocalScanServer$MarkAttendanceHandler.class
+Main.class
+AttendanceManager.class
+AttendanceManager$MarkAttempt.class
+Controller.class
+LocalScanServer.class
+QRGenerator.class
+Student.class
+LocalScanServer$ScanPageHandler.class
